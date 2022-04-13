@@ -7,13 +7,21 @@ defmodule Exlivery.Orders.Item do
   defstruct @keys
 
   def build(description, category, unit_price, quantity) when quantity > 0 and category in @categories do
-      {:ok, %__MODULE__{
-        description: description,
-        category: category,
-        unit_price: unit_price,
-        quantity: quantity
-      }}
+    unit_price
+    |> Decimal.cast()
+    |> build_item(description, category, quantity)
   end
 
   def build(__description, _category, _unit_price, _quantity), do: {:error, "Invalid parameters"}
+
+  defp build_item({:ok, unit_price}, description, category, quantity) do
+    {:ok, %__MODULE__{
+      description: description,
+      category: category,
+      unit_price: unit_price,
+      quantity: quantity
+    }}
+  end
+
+  defp build_item({:error}), do: {:error, "Invalid unit price"}
 end
