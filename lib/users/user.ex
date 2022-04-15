@@ -4,14 +4,14 @@ defmodule Exlivery.Users.User do
   defstruct @keys
 
   #Normalmente num struct tem uma função de build, para não ter que digitar toda vez, pedaço por pedaço
-  def build(address, name, email, cpf, age) when age >= 18 and is_bitstring(cpf) do
+  def build(name, email, cpf, age, address) when age >= 18 and is_bitstring(cpf) do
     {:ok,
       %__MODULE__{
-      address: address,
       name: name,
       email: email,
       cpf: cpf,
-      age: age
+      age: age,
+      address: address,
     }}
   end
 
