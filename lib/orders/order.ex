@@ -2,7 +2,7 @@ defmodule Exlivery.Orders.Order do
   alias Exlivery.Orders.Item
   alias Exlivery.Users.User
 
-  @keys [:user_cpf, :delivery_adress, :item, :total_price]
+  @keys [:user_cpf, :delivery_adress, :items, :total_price]
   @enforce_keys @keys
 
   defstruct @keys
@@ -13,7 +13,7 @@ defmodule Exlivery.Orders.Order do
      %__MODULE__{
        user_cpf: cpf,
        delivery_adress: address,
-       item: items,
+       items: items,
        total_price: calculate_total_price(items)
      }}
   end
