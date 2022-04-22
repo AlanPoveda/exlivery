@@ -14,7 +14,7 @@ defmodule Exlivery.Users.Agent do
 
   defp update_state(state, %User{cpf: cpf} = user), do: Map.put(state, cpf, user)
 
-  defp get_user(state, %User{cpf: cpf} = user) do
+  defp get_user(state, cpf) do
           state
           |> Map.get(cpf)
           |> handle_get()
