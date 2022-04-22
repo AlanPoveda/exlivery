@@ -1,5 +1,5 @@
 defmodule Exlivery.Orders.Agent do
-  alias Exlivery.Orders.Item
+  alias Exlivery.Orders.Order
 
   use Agent
 
@@ -7,18 +7,23 @@ defmodule Exlivery.Orders.Agent do
     Agent.start_link(fn -> %{} end, name: __MODULE__)
   end
 
-  def save(%Order{} = order), do: Agent.update(__MODULE__, &update_state(&1, order))
+  def save(%Order{} = order) do
+    uuid = UUID.uuid4()
+    Agent.update(__MODULE__, &update_state(&1, order, uuid))
 
-  def get(cpf), do: Agent.get(__MODULE__, &get_user(&1, cpf))
+    {:ok, uuid}
+  end
 
-  defp update_state(state, %Item{cpf: cpf} = item), do: Map.put(state, cpf, user)
+  def get(uuid), do: Agent.get(__MODULE__, &get_order(&1, uuid))
 
-  defp get_user(state, cpf) do
+  defp update_state(state, %Order{} = order, uuid), do: Map.put(state, uuid, order)
+
+  defp get_order(state, uuid) do
     state
-    |> Map.get(cpf)
+    |> Map.get(uuid)
     |> handle_get()
   end
 
-  defp handle_get(nil), do: {:error, "User not found"}
-  defp handle_get(user), do: {:ok, user}
+  defp handle_get(nil), do: {:error, "Order not found"}
+  defp handle_get(order), do: {:ok, order}
 end
